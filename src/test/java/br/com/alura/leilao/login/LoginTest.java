@@ -52,6 +52,14 @@ public class LoginTest {
 		//assertEquals("", driver.findElement(By.id("nameLogado")).getText());
 		
 	}
+	
+	@Test
+	public void naoDeveriaAcessarPaginaRestritaSemEstarLogado() {
+		driver.navigate().to("http://localhost:8080/leiloes/2");
+		Assert.assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/login"));
+		Assert.assertFalse(driver.getPageSource().contains("Dados do Leilão"));
+	}
+	
 	@AfterEach
 	public void after() {
 		this.driver.quit();
