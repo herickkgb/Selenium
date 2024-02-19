@@ -11,57 +11,34 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import junit.framework.Assert;
 
 public class LoginTest {
-	String url = "http://localhost:8080/login";
-	private WebDriver driver;
-	
-	@BeforeAll
-	public static void beforeAll() {
-		System.setProperty("webdriver.chrome.driver",
-				"C:\\Users\\Herick\\eclipse-workspace\\selenium-java\\drivers\\chromedriver.exe");
-	}
-	
-	
-	@BeforeEach
-	public void before() {
-		this.driver  = new ChromeDriver();
-		
-	}
-	
 
-	
+	private LoginPage pg;
+
+	@BeforeEach
+	public void beforeAll() {
+		this.pg = new LoginPage();
+	}
+
 	@SuppressWarnings("deprecation")
 	@Test
 	public void fazerLoginComDadosValidos() {
-		driver.get(this.url);
-		driver.findElement(By.id("username")).sendKeys("fulano");
-		driver.findElement(By.id("password")).sendKeys("pass");
-		driver.findElement(By.id("login-form")).submit();
-		Assert.assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/leiloes"));
-	//	Assert.assertEquals("fulano", driver.findElement(By.id("usuario-logado")).getText());
-		
+		pg.preencherFormularioLogin("fulano", "pass");
+
 	}
-	
+
 	@Test
 	public void loginInvalido() {
-		driver.get(this.url);
-		driver.findElement(By.id("username")).sendKeys("invalido");
-		driver.findElement(By.id("password")).sendKeys("pass");
-		driver.findElement(By.id("login-form")).submit();
+		pg.loginInvalido("invalido", "sdf");
 
-		Assert.assertTrue(driver.getPageSource().contains("Usuário e senha inválidos."));
-		//assertEquals("", driver.findElement(By.id("nameLogado")).getText());
-		
 	}
-	
+
 	@Test
 	public void naoDeveriaAcessarPaginaRestritaSemEstarLogado() {
-		driver.navigate().to("http://localhost:8080/leiloes/2");
-		Assert.assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/login"));
-		Assert.assertFalse(driver.getPageSource().contains("Dados do Leilão"));
+		pg.naoDeveriaAcessarPaginaRestritaSemEstarLogado("http://localhost:8080/leiloes", "Dados do Leilão");
 	}
-	
-	@AfterEach
-	public void after() {
-		this.driver.quit();
-	}
+
+//	@AfterEach
+//	public void after() {
+//		this.pg.fechar();
+//	}
 }
